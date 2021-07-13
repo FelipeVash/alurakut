@@ -1,4 +1,3 @@
-import Box from '../../../foundation/Box';
 import AlurakutProfileSidebarMenuDefault from '../Default';
 
 export default function AlurakutMenuProfileSidebar({ githubUser }, { name }) {
