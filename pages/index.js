@@ -2,11 +2,28 @@ import React from 'react';
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/foundation/Box'
 import AlurakutMenu from '../src/components/commons/Menu'
+import AlurakutProfileSidebarMenuDefault from '../src/components/commons/Menu/Default'
 import OrkutNostalgicIconSet from '../src/components/commons/IconSet';
-import AlurakutMenuProfileSidebar from '../src/components/commons/Menu/ProfileSideBar';
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
 
 const fixedUser = 'felipevash';
+
+function ProfileSidebar(props) {
+  const name = props.userData.name;
+  return (
+    <Box as="aside">
+      <img src={`https://github.com/${props.githubUser}.png`} style={{ borderRadius: '8px' }} />
+      <hr />
+      <p>
+        <a className="boxLink" href={`https://github.com/${props.githubUser}`}>
+          {props.name}
+        </a>
+      </p>
+      <hr />
+      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name}>
+    </Box>
+  )
+}
 
 export default function Home(props) {
   const name = props.userData.name;
@@ -28,7 +45,7 @@ export default function Home(props) {
       <MainGrid>
         {/* <Box style="grid-area: profileArea;"> */}
         <div className="profileArea" style={{ gridArea: 'profileArea' }}>
-          <AlurakutMenuProfileSidebar githubUser={fixedUser} key={fixedUser} name={name}/>
+          <ProfileSidebar githubUser={fixedUser} key={fixedUser} name={name}/>
         </div>
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box>
