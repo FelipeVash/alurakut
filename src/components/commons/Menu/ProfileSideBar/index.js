@@ -2,18 +2,17 @@ import Box from '../../../foundation/Box';
 import AlurakutProfileSidebarMenuDefault from '../Default';
 
 export default function AlurakutMenuProfileSidebar({ githubUser }, { name }) {
-  const name = props.name;
   return (
     <Box as="aside">
-      <img src={`https://github.com/${props.githubUser}.png`} style={{ borderRadius: '8px' }} />
+      <img src={`https://github.com/${githubUser}.png`} style={{ borderRadius: '8px' }} />
       <hr />
       <p>
-        <a className="boxLink" href={`https://github.com/${props.githubUser}`}>
-          {props.name}
+        <a className="boxLink" href={`https://github.com/${githubUser}`}>
+          {name}
         </a>
       </p>
       <hr />
-      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name} />
+      <AlurakutProfileSidebarMenuDefault githubUser={githubUser} name={name} />
     </Box>
   )
 }
