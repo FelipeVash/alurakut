@@ -9,6 +9,7 @@ import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
 const fixedUser = 'felipevash';
 
 function ProfileSidebar(props) {
+  const name = props.userData.name;
   return (
     <Box as="aside">
       <img src={`https://github.com/${props.githubUser}.png`} style={{ borderRadius: '8px' }} />
@@ -19,25 +20,25 @@ function ProfileSidebar(props) {
         </a>
       </p>
       <hr />
-      <AlurakutProfileSidebarMenuDefault />
+      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={props.name} />
     </Box>
   )
 }
 
 export default function Home(props) {
+  const name = props.userData.name;
   const comunidadesGitHub = props.userCommunity;
   const [comunidades, setComunidades] = React.useState([{
+    id: 1,
     title: 'Eu odeio acordar cedo',
     image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
   }, ...comunidadesGitHub]);
-  const lista = props.followers;
-  const name = props.userData.name;
-  const listaSeguidores = [];
-
-  lista.map((seguidor) => {
-    listaSeguidores.push(seguidor.login)
+  const listaSeguidores = props.followers.map((seguidor) => {
+    const lista = [];
+    lista.push(seguidor.login)
+    return lista
   });
-  
+
   return (
     <>
       <AlurakutMenu githubUser={fixedUser} name={name}/>
@@ -60,10 +61,11 @@ export default function Home(props) {
               e.preventDefault();
               const dadosDoForm = new FormData(e.target);
               const comunidade = {
+                id: new Date().toISOString(),
                 title: dadosDoForm.get('title'),
                 image: dadosDoForm.get('image'),
               }
-              const comunidadesAtualizadas = [...comunidades, comunidade];
+              const comunidadesAtualizadas = [comunidade, ...comunidades];
               setComunidades(comunidadesAtualizadas);
             }}>
               <div>
@@ -92,40 +94,39 @@ export default function Home(props) {
             <h2 className="smallTitle">
               Seguidores ({listaSeguidores.length})
             </h2>
-
             <ul>
-              {listaSeguidores.map((itemAtual) => {
-                if(listaSeguidores.length > 6) {
-                  listaSeguidores.splice(6, listaSeguidores.length)
+              {listaSeguidores.map((itemAtual, i = 0) => {
+                if(i < 6){
+                  i++
+                  return (
+                    <li  key={itemAtual}>
+                      <a href={`/users/${itemAtual}`}>
+                        <img src={`https://github.com/${itemAtual}.png`} />
+                        <span>{itemAtual}</span>
+                      </a>
+                    </li>
+                  )
                 }
-                return (
-                  <li  key={itemAtual}>
-                    <a href={`/users/${itemAtual}`}>
-                      <img src={`https://github.com/${itemAtual}.png`} />
-                      <span>{itemAtual}</span>
-                    </a>
-                  </li>
-                )
               })}
             </ul>
           </ProfileRelationsBoxWrapper>
           <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
+            <h2 className="smallTitle">
               Comunidades ({comunidades.length})
             </h2>
             <ul>
-              {comunidades.map((itemAtual) => {
-                if(comunidades.length > 6) {
-                  comunidades.splice(6, comunidades.length)
+              {comunidades.map((itemAtual, i = 0) => {
+                if(i < 6) {
+                  i++
+                  return (
+                    <li  key={itemAtual.id}>
+                      <a href={`/user/${itemAtual.title}`}>
+                        <img src={itemAtual.image} />
+                        <span>{itemAtual.title}</span>
+                      </a>
+                    </li>
+                  )
                 }
-                return (
-                  <li  key={itemAtual.title}>
-                    <a href={`/user/${itemAtual.title}`}>
-                      <img src={itemAtual.image} />
-                      <span>{itemAtual.title}</span>
-                    </a>
-                  </li>
-                )
               })}
             </ul>
           </ProfileRelationsBoxWrapper>
@@ -153,6 +154,7 @@ export async function getStaticProps() {
         const comunidadesGitHub = [];
         respostaConvertida.map((community) => {
           let comunidadeGitHub = {
+            id: community.id,
             title: community.name,
             image: community.owner.avatar_url
           }

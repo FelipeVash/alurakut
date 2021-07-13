@@ -1,6 +1,7 @@
 import AlurakutProfileSidebarMenuDefault from '../Default';
 
 export default function AlurakutMenuProfileSidebar({ githubUser }, { name }) {
+    console.log(name);
     return (
       <div className="alurakutMenuProfileSidebar">
         <div>
