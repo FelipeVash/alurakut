@@ -20,7 +20,7 @@ function ProfileSidebar(props) {
         </a>
       </p>
       <hr />
-      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name}>
+      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name} />
     </Box>
   )
 }

@@ -14,7 +14,7 @@ export default function AlurakutMenuProfileSidebar({ githubUser }, { name }) {
         </p>
         <hr />
 
-        <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name}/>
+        <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name} />
       </div>
     </div>
   )
