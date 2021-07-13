@@ -1,6 +1,6 @@
 import AlurakutProfileSidebarMenuDefault from '../Default';
 
-export default function AlurakutMenuProfileSidebar({ githubUser }) {
+export default function AlurakutMenuProfileSidebar({ githubUser }, { name }) {
     return (
       <div className="alurakutMenuProfileSidebar">
         <div>
@@ -8,7 +8,7 @@ export default function AlurakutMenuProfileSidebar({ githubUser }) {
           <hr />
           <p>
             <a className="boxLink" href={`/user/${githubUser}`}>
-              @{githubUser}
+              {name}
             </a>
           </p>
           <hr />
