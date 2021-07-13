@@ -9,7 +9,7 @@ import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
 const fixedUser = 'felipevash';
 
 function ProfileSidebar(props) {
-  const name = props.userData.name;
+  const name = props.name;
   return (
     <Box as="aside">
       <img src={`https://github.com/${props.githubUser}.png`} style={{ borderRadius: '8px' }} />
@@ -20,7 +20,7 @@ function ProfileSidebar(props) {
         </a>
       </p>
       <hr />
-      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={props.name} />
+      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name} />
     </Box>
   )
 }
