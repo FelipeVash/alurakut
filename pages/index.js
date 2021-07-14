@@ -2,26 +2,34 @@ import React from 'react';
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/foundation/Box'
 import AlurakutMenu from '../src/components/commons/Menu'
-import AlurakutProfileSidebarMenuDefault from '../src/components/commons/Menu/Default'
 import OrkutNostalgicIconSet from '../src/components/commons/IconSet';
-import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
+import ProfileSidebar from '../src/components/Profile/ProfileSidebar';
+import { ProfileRelationsBoxWrapper } from '../src/components/Profile/ProfileRelations/wrapper';
 
 const fixedUser = 'felipevash';
 
-function ProfileSidebar(props) {
-  const name = props.name;
+function ProfileRelationsBox(props) {
   return (
-    <Box as="aside">
-      <img src={`https://github.com/${props.githubUser}.png`} style={{ borderRadius: '8px' }} />
-      <hr />
-      <p>
-        <a className="boxLink" href={`https://github.com/${props.githubUser}`}>
-          {name}
-        </a>
-      </p>
-      <hr />
-      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name} />
-    </Box>
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {props.title} ({props.items.length})
+      </h2>
+      <ul>
+        {props.items.map((itemAtual, i = 0) => {
+          if(i < 6){
+            i++
+            return (
+              <li  key={itemAtual.id}>
+                <a href={`https://github.com/${itemAtual.login}`}>
+                  <img src={`${itemAtual.image}`} />
+                  <span>{itemAtual.login}</span>
+                </a>
+              </li>
+            )
+          }
+        })}
+      </ul>
+    </ProfileRelationsBoxWrapper>
   )
 }
 
@@ -31,19 +39,15 @@ export default function Home(props) {
   const [comunidades, setComunidades] = React.useState([{
     id: 1,
     title: 'Eu odeio acordar cedo',
+    owner: {fixedUser},
     image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
   }, ...comunidadesGitHub]);
-  const listaSeguidores = props.followers.map((seguidor) => {
-    const lista = [];
-    lista.push(seguidor.login)
-    return lista
-  });
-
+  console.log(props.followers);
+  console.log(props.following);
   return (
     <>
       <AlurakutMenu githubUser={fixedUser} name={name}/>
       <MainGrid>
-        {/* <Box style="grid-area: profileArea;"> */}
         <div className="profileArea" style={{ gridArea: 'profileArea' }}>
           <ProfileSidebar githubUser={fixedUser} key={fixedUser} name={name}/>
         </div>
@@ -53,7 +57,7 @@ export default function Home(props) {
               Bem vindo(a), {name}
             </h1>
 
-            <OrkutNostalgicIconSet />
+            <OrkutNostalgicIconSet fas={props.followers.length}/>
           </Box>
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
@@ -63,6 +67,7 @@ export default function Home(props) {
               const comunidade = {
                 id: new Date().toISOString(),
                 title: dadosDoForm.get('title'),
+                owner: {fixedUser},
                 image: dadosDoForm.get('image'),
               }
               const comunidadesAtualizadas = [comunidade, ...comunidades];
@@ -90,26 +95,8 @@ export default function Home(props) {
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Amigos ({listaSeguidores.length})
-            </h2>
-            <ul>
-              {listaSeguidores.map((itemAtual, i = 0) => {
-                if(i < 6){
-                  i++
-                  return (
-                    <li  key={itemAtual}>
-                      <a href={`/users/${itemAtual}`}>
-                        <img src={`https://github.com/${itemAtual}.png`} />
-                        <span>{itemAtual}</span>
-                      </a>
-                    </li>
-                  )
-                }
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
+          <ProfileRelationsBox title="Seguidores" items={props.followers} />
+          <ProfileRelationsBox title="Seguindo" items={props.following} />
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
               Comunidades ({comunidades.length})
@@ -120,7 +107,7 @@ export default function Home(props) {
                   i++
                   return (
                     <li  key={itemAtual.id}>
-                      <a href={`/user/${itemAtual.title}`}>
+                      <a href={`https://github.com/${itemAtual.owner}/${itemAtual.title}`}>
                         <img src={itemAtual.image} />
                         <span>{itemAtual.title}</span>
                       </a>
@@ -137,37 +124,87 @@ export default function Home(props) {
 }
 
 export async function getStaticProps() {
-  const followers = await fetch(`https://api.github.com/users/${fixedUser}/followers`)
+  const baseURL = `https://api.github.com/users/${fixedUser}`;
+  const userData = await fetch(`${baseURL}`)
       .then((resposta) => {
+        if(resposta.ok) {
+          return resposta.json();
+        }
+        throw new Error('Aconteceu algum problema :(' + resposta.status)
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+  const followers = await fetch(`${baseURL}/followers`)
+    .then((resposta) => {
+      if(resposta.ok) {
         return resposta.json();
+      }
+      throw new Error('Aconteceu algum problema :(' + resposta.status)
+    })
+    .then((resposta) => {
+      const listaSeguidores = [];
+      resposta.map((user) => {
+        const userList = {
+          id: user.id,
+          login: user.login,
+          image: user.avatar_url,
+        }
+        listaSeguidores.push(userList);
+        return listaSeguidores;
       })
-  const userData = await fetch(`https://api.github.com/users/${fixedUser}`)
-      .then((resposta) => {
+      return listaSeguidores;
+    })
+  const following = await fetch(`${baseURL}/following`)
+    .then((resposta) => {
+      if(resposta.ok) {
         return resposta.json();
+      }
+      throw new Error('Aconteceu algum problema :(' + resposta.status)
+    })
+    .then((resposta) => {
+      const listaSeguindo = [];
+      resposta.map((user) => {
+        const userList = {
+          id: user.id,
+          login: user.login,
+          image: user.avatar_url,
+        }
+        listaSeguindo.push(userList);
+        return listaSeguindo;
       })
-  const userCommunity = await fetch(`https://api.github.com/users/${fixedUser}/starred`)
-      .then((resposta) => {
-        const respostaConvertida = resposta.json();
-        return respostaConvertida
+      return listaSeguindo;
       })
-      .then((respostaConvertida) => {
-        const comunidadesGitHub = [];
-        respostaConvertida.map((community) => {
-          let comunidadeGitHub = {
-            id: community.id,
-            title: community.name,
-            image: community.owner.avatar_url
-          }
-          comunidadesGitHub.push(comunidadeGitHub);
-          return comunidadesGitHub;
-        })
+  const userCommunity = await fetch(`${baseURL}/starred`)
+    .then((resposta) => {
+      if(resposta.ok) {
+        return resposta.json();
+      }
+      throw new Error('Aconteceu algum problema :(' + resposta.status)
+    })
+    .then((resposta) => {
+      const comunidadesGitHub = [];
+      resposta.map((community) => {
+        const comunidadeGitHub = {
+          id: community.id,
+          title: community.name,
+          owner: community.owner.login,
+          image: community.owner.avatar_url
+        }
+        comunidadesGitHub.push(comunidadeGitHub);
         return comunidadesGitHub;
       })
+      return comunidadesGitHub;
+    })
+    .catch((error) => {
+      console.error(error);
+    })
 
   return {
     props: {
-      followers: followers,
       userData: userData,
+      followers: followers,
+      following: following,
       userCommunity: userCommunity
     },
   }
