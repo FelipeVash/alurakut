@@ -52,7 +52,7 @@ export default function OrkutNostalgicIconSet(props) {
     flex-wrap: wrap;
     li {
       font-size: 12px;
-      color: #5A5A5A;
+      color: #FFFFFF;
       display: grid;
       grid-template-areas:
         "title title"

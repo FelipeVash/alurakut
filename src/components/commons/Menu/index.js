@@ -6,7 +6,8 @@ import Link from '../Link';
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
 
-export default function AlurakutMenu({ githubUser }) {
+export default function AlurakutMenu({ githubUser, name }) {
+    console.log(name);
     const [isMenuOpen, setMenuState] = React.useState(false);
     return (
       <AlurakutMenu.Wrapper isMenuOpen={isMenuOpen}>
@@ -35,16 +36,16 @@ export default function AlurakutMenu({ githubUser }) {
             {!isMenuOpen && <img src={`${BASE_URL}/icons/menu-closed.svg?v=${v}`} />}
           </button>
         </div>
-        <AlurakutMenuProfileSidebar githubUser={githubUser} />
+        <AlurakutMenuProfileSidebar githubUser={githubUser} name={name}/>
       </AlurakutMenu.Wrapper>
     )
   }
   AlurakutMenu.Wrapper = styled.header`
     width: 100%;
-    background-color: #308BC5;
+    background-color: #191919;
   
     .alurakutMenuProfileSidebar {
-      background: white;
+      background: #292929;
       position: fixed;
       z-index: 100;
       padding: 46px;
@@ -68,7 +69,7 @@ export default function AlurakutMenu({ githubUser }) {
       }
       .boxLink {
         font-size: 18px;
-        color: #2E7BB4;
+        color: #308BC5;
         -webkit-text-decoration: none;
         text-decoration: none;
         font-weight: 800;
@@ -78,12 +79,12 @@ export default function AlurakutMenu({ githubUser }) {
         margin-top: 12px;
         margin-bottom: 8px;
         border-color: transparent;
-        border-bottom-color: #ECF2FA;
+        border-bottom-color: #FFFFFF;
       }
     }
   
     .container {
-      background-color: #308BC5;
+      background-color: #191919;
       padding: 7px 16px;
       max-width: 1110px;
       margin: auto;
@@ -148,7 +149,7 @@ export default function AlurakutMenu({ githubUser }) {
     }
   `;
   AlurakutMenu.Logo = styled.img`
-    background-color: #ffffff;
+    background-color: #292929;
     padding: 9px 14px;
     border-radius: 1000px;
     height: 34px;
