@@ -42,8 +42,9 @@ export default function Home(props) {
               const comunidade = {
                 id: new Date().toISOString(),
                 title: dadosDoForm.get('title'),
-                owner: {fixedUser},
+                login: {fixedUser},
                 image: dadosDoForm.get('image'),
+                url: dadosDoForm.get('url'),
               }
               const comunidadesAtualizadas = [comunidade, ...comunidades];
               setComunidades(comunidadesAtualizadas);
@@ -66,7 +67,7 @@ export default function Home(props) {
               <div>
                 <input 
                   placeholder="Coloque o link para comunidade"
-                  name="image"
+                  name="url"
                   aria-label="Coloque o link para comunidade"
                 />
               </div>
