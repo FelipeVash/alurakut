@@ -1,6 +1,6 @@
 import AlurakutProfileSidebarMenuDefault from '../Default';
 
-export default function AlurakutMenuProfileSidebar({ githubUser }, { name }) {
+export default function AlurakutMenuProfileSidebar({ githubUser, name }) {
   return (
     <div className="alurakutMenuProfileSidebar">
       <div>
@@ -13,7 +13,7 @@ export default function AlurakutMenuProfileSidebar({ githubUser }, { name }) {
         </p>
         <hr />
 
-        <AlurakutProfileSidebarMenuDefault githubUser={githubUser} name={name} />
+        <AlurakutProfileSidebarMenuDefault />
       </div>
     </div>
   )

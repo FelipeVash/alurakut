@@ -6,7 +6,8 @@ import Link from '../Link';
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
 
-export default function AlurakutMenu({ githubUser }, { name }) {
+export default function AlurakutMenu({ githubUser, name }) {
+    console.log(name);
     const [isMenuOpen, setMenuState] = React.useState(false);
     return (
       <AlurakutMenu.Wrapper isMenuOpen={isMenuOpen}>
