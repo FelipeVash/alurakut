@@ -8,7 +8,7 @@ import ProfileRelationsBox from '../src/components/Profile/ProfileRelations/box'
 
 const fixedUser = 'felipevash';
 
-export default function Home(props) {
+export default async function Home(props) {
   const baseURL = `https://api.github.com/users/${fixedUser}`;
   const name = props.userData.name;
   const [seguidores, setSeguidores] = React.useState([]);
