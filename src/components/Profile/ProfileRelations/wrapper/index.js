@@ -24,6 +24,7 @@ export const ProfileRelationsBoxWrapper = styled(Box)`
     border-radius: 8px;
     span {
       color: #FFFFFF;
+      background: #191919BF;
       font-size: 10px;
       position: absolute;
       left: 0;

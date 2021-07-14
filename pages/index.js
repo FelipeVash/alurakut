@@ -5,19 +5,142 @@ import AlurakutMenu from '../src/components/commons/Menu'
 import OrkutNostalgicIconSet from '../src/components/commons/IconSet';
 import ProfileSidebar from '../src/components/Profile/ProfileSidebar';
 import ProfileRelationsBox from '../src/components/Profile/ProfileRelations/box';
-import { ProfileRelationsBoxWrapper } from '../src/components/Profile/ProfileRelations/wrapper';
 
 const fixedUser = 'felipevash';
 
 export default function Home(props) {
+  const baseURL = `https://api.github.com/users/${fixedUser}`;
   const name = props.userData.name;
-  const comunidadesGitHub = props.userCommunity;
-  const [comunidades, setComunidades] = React.useState([{
-    id: 1,
-    title: 'Eu odeio acordar cedo',
-    owner: {fixedUser},
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }, ...comunidadesGitHub]);
+  const [seguidores, setSeguidores] = React.useState([]);
+  const [seguindo, setSeguindo] = React.useState([]);
+  const [comunidades, setComunidades] = React.useState([]);
+  React.useEffect(() => {
+    fetch(`${baseURL}/followers`)
+      .then((resposta) => {
+        if(resposta.ok) {
+          return resposta.json();
+        }
+        throw new Error('Aconteceu algum problema :(' + resposta.status)
+      })
+      .then((resposta) => {
+        const listaSeguidores = [];
+        resposta.map((user) => {
+          const userList = {
+            id: user.id,
+            title: user.login,
+            login: user.login,
+            image: user.avatar_url,
+            url: `https://github.com/${user.login}`,
+          }
+          listaSeguidores.push(userList);
+        })
+        setSeguidores(listaSeguidores);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+    fetch(`${baseURL}/following`)
+    .then((resposta) => {
+      if(resposta.ok) {
+        return resposta.json();
+      }
+      throw new Error('Aconteceu algum problema :(' + resposta.status)
+    })
+    .then((resposta) => {
+      const listaSeguindo = [];
+      resposta.map((user) => {
+        const userList = {
+          id: user.id,
+          title: user.login,
+          login: user.login,
+          image: user.avatar_url,
+          url: `https://github.com/${user.login}`,
+        }
+        listaSeguindo.push(userList);
+      })
+      setSeguindo(listaSeguindo);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+    fetch(`${baseURL}/starred`)
+    .then((resposta) => {
+      if(resposta.ok) {
+        return resposta.json();
+      }
+      throw new Error('Aconteceu algum problema :(' + resposta.status)
+    })
+    .then((resposta) => {
+      const comunidadesList = [];
+      resposta.map((community) => {
+        const comunidadeGitHub = {
+          id: community.id,
+          title: community.name,
+          login: community.owner.login,
+          image: community.owner.avatar_url,
+          url: `https://github.com/${community.owner.login}/${community.name}`,
+        }
+        comunidadesList.push(comunidadeGitHub);
+      })
+      setComunidades(comunidadesList);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+  }, [])
+
+  // React.useEffect(() => {
+  //   fetch(`${baseURL}/following`)
+  //   .then((resposta) => {
+  //     if(resposta.ok) {
+  //       return resposta.json();
+  //     }
+  //     throw new Error('Aconteceu algum problema :(' + resposta.status)
+  //   })
+  //   .then((resposta) => {
+  //     const listaSeguindo = [];
+  //     resposta.map((user) => {
+  //       const userList = {
+  //         id: user.id,
+  //         title: user.login,
+  //         login: user.login,
+  //         image: user.avatar_url,
+  //         url: `https://github.com/${user.login}`,
+  //       }
+  //       listaSeguindo.push(userList);
+  //     })
+  //     setSeguindo(listaSeguindo);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     })
+  // }, [])
+  // React.useEffect(() => {
+  //   fetch(`${baseURL}/starred`)
+  //   .then((resposta) => {
+  //     if(resposta.ok) {
+  //       return resposta.json();
+  //     }
+  //     throw new Error('Aconteceu algum problema :(' + resposta.status)
+  //   })
+  //   .then((resposta) => {
+  //     const comunidadesList = [];
+  //     resposta.map((community) => {
+  //       const comunidadeGitHub = {
+  //         id: community.id,
+  //         title: community.name,
+  //         login: community.owner.login,
+  //         image: community.owner.avatar_url,
+  //         url: `https://github.com/${community.owner.login}/${community.name}`,
+  //       }
+  //       comunidadesList.push(comunidadeGitHub);
+  //     })
+  //     setComunidades(comunidadesList);
+  //   })
+  //   .catch((error) => {
+  //     console.error(error);
+  //   })
+  // }, []);
 
   return (
     <>
@@ -32,7 +155,7 @@ export default function Home(props) {
               Bem vindo(a), {name}
             </h1>
 
-            <OrkutNostalgicIconSet fas={props.followers.length}/>
+            <OrkutNostalgicIconSet fas={seguidores.length}/>
           </Box>
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
@@ -42,8 +165,9 @@ export default function Home(props) {
               const comunidade = {
                 id: new Date().toISOString(),
                 title: dadosDoForm.get('title'),
-                owner: {fixedUser},
+                login: {fixedUser},
                 image: dadosDoForm.get('image'),
+                url: dadosDoForm.get('url')
               }
               const comunidadesAtualizadas = [comunidade, ...comunidades];
               setComunidades(comunidadesAtualizadas);
@@ -63,6 +187,13 @@ export default function Home(props) {
                   aria-label="Coloque uma URL para usarmos de capa"
                 />
               </div>
+              <div>
+                <input 
+                  placeholder="Coloque o link para comunidade"
+                  name="url"
+                  aria-label="Coloque o link para comunidade"
+                />
+              </div>
               <button>
                 Criar comunidade
               </button>
@@ -70,28 +201,9 @@ export default function Home(props) {
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-          <ProfileRelationsBox title="Seguidores" items={props.followers} />
-          <ProfileRelationsBox title="Seguindo" items={props.following} />
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Comunidades ({comunidades.length})
-            </h2>
-            <ul>
-              {comunidades.map((itemAtual, i = 0) => {
-                if(i < 6) {
-                  i++
-                  return (
-                    <li  key={itemAtual.id}>
-                      <a href={`https://github.com/${itemAtual.owner}/${itemAtual.title}`}>
-                        <img src={itemAtual.image} />
-                        <span>{itemAtual.title}</span>
-                      </a>
-                    </li>
-                  )
-                }
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
+          <ProfileRelationsBox title="Seguidores" items={seguidores} />
+          <ProfileRelationsBox title="Seguindo" items={seguindo} />
+          <ProfileRelationsBox title="Comunidades" items={comunidades} />
         </div>
       </MainGrid>
     </>
@@ -110,77 +222,10 @@ export async function getStaticProps() {
       .catch((error) => {
         console.error(error);
       })
-  const followers = await fetch(`${baseURL}/followers`)
-    .then((resposta) => {
-      if(resposta.ok) {
-        return resposta.json();
-      }
-      throw new Error('Aconteceu algum problema :(' + resposta.status)
-    })
-    .then((resposta) => {
-      const listaSeguidores = [];
-      resposta.map((user) => {
-        const userList = {
-          id: user.id,
-          login: user.login,
-          image: user.avatar_url,
-        }
-        listaSeguidores.push(userList);
-        return listaSeguidores;
-      })
-      return listaSeguidores;
-    })
-  const following = await fetch(`${baseURL}/following`)
-    .then((resposta) => {
-      if(resposta.ok) {
-        return resposta.json();
-      }
-      throw new Error('Aconteceu algum problema :(' + resposta.status)
-    })
-    .then((resposta) => {
-      const listaSeguindo = [];
-      resposta.map((user) => {
-        const userList = {
-          id: user.id,
-          login: user.login,
-          image: user.avatar_url,
-        }
-        listaSeguindo.push(userList);
-        return listaSeguindo;
-      })
-      return listaSeguindo;
-      })
-  const userCommunity = await fetch(`${baseURL}/starred`)
-    .then((resposta) => {
-      if(resposta.ok) {
-        return resposta.json();
-      }
-      throw new Error('Aconteceu algum problema :(' + resposta.status)
-    })
-    .then((resposta) => {
-      const comunidadesGitHub = [];
-      resposta.map((community) => {
-        const comunidadeGitHub = {
-          id: community.id,
-          title: community.name,
-          owner: community.owner.login,
-          image: community.owner.avatar_url
-        }
-        comunidadesGitHub.push(comunidadeGitHub);
-        return comunidadesGitHub;
-      })
-      return comunidadesGitHub;
-    })
-    .catch((error) => {
-      console.error(error);
-    })
 
   return {
     props: {
       userData: userData,
-      followers: followers,
-      following: following,
-      userCommunity: userCommunity
     },
   }
 }

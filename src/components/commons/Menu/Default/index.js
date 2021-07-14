@@ -41,7 +41,7 @@ export default function AlurakutProfileSidebarMenuDefault() {
   AlurakutProfileSidebarMenuDefault.Wrapper = styled.div`
     a {
       font-size: 12px;
-      color: #2E7BB4;
+      color: #FFFFFF;
       margin-bottom: 16px;
       display: flex;
       align-items: center;

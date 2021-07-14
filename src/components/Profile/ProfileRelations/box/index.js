@@ -13,9 +13,9 @@ export default function ProfileRelationsBox(props) {
             i++
             return (
               <li  key={itemAtual.id}>
-                <a href={`https://github.com/${itemAtual.login}`}>
+                <a href={itemAtual.url}>
                   <img src={`${itemAtual.image}`} />
-                  <span>{itemAtual.login}</span>
+                  <span>{itemAtual.title}</span>
                 </a>
               </li>
             )

@@ -118,7 +118,7 @@ export default function AlurakutMenu({ githubUser, name }) {
           text-decoration: none;
           &:after {
             content: " ";
-            background-color: #5292C1;
+            background-color: #FFFFFF;
             display: block;
             position: absolute;
             width: 1px;
@@ -131,8 +131,8 @@ export default function AlurakutMenu({ githubUser, name }) {
         }
       }
       input {
-        color: #ffffff;
-        background: #5579A1;
+        color: #FFFFFF;
+        background: #292929;
         padding: 10px 42px;
         border: 0;
         background-image: url(${`${BASE_URL}/icons/search.svg`});
@@ -141,7 +141,7 @@ export default function AlurakutMenu({ githubUser, name }) {
         border-radius: 1000px;
         font-size: 12px;
         ::placeholder {
-          color: #ffffff;
+          color: #787878;
           opacity: 1;
         }
       } 
