@@ -4,34 +4,10 @@ import Box from '../src/components/foundation/Box'
 import AlurakutMenu from '../src/components/commons/Menu'
 import OrkutNostalgicIconSet from '../src/components/commons/IconSet';
 import ProfileSidebar from '../src/components/Profile/ProfileSidebar';
+import ProfileRelationsBox from '../src/components/Profile/ProfileRelations/box';
 import { ProfileRelationsBoxWrapper } from '../src/components/Profile/ProfileRelations/wrapper';
 
 const fixedUser = 'felipevash';
-
-function ProfileRelationsBox(props) {
-  return (
-    <ProfileRelationsBoxWrapper>
-      <h2 className="smallTitle">
-        {props.title} ({props.items.length})
-      </h2>
-      <ul>
-        {props.items.map((itemAtual, i = 0) => {
-          if(i < 6){
-            i++
-            return (
-              <li  key={itemAtual.id}>
-                <a href={`https://github.com/${itemAtual.login}`}>
-                  <img src={`${itemAtual.image}`} />
-                  <span>{itemAtual.login}</span>
-                </a>
-              </li>
-            )
-          }
-        })}
-      </ul>
-    </ProfileRelationsBoxWrapper>
-  )
-}
 
 export default function Home(props) {
   const name = props.userData.name;
@@ -42,8 +18,7 @@ export default function Home(props) {
     owner: {fixedUser},
     image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
   }, ...comunidadesGitHub]);
-  console.log(props.followers);
-  console.log(props.following);
+
   return (
     <>
       <AlurakutMenu githubUser={fixedUser} name={name}/>
