@@ -92,7 +92,7 @@ export default function Home(props) {
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
-              Seguidores ({listaSeguidores.length})
+              Amigos ({listaSeguidores.length})
             </h2>
             <ul>
               {listaSeguidores.map((itemAtual, i = 0) => {
