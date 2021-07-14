@@ -120,6 +120,9 @@ export async function getStaticProps() {
       })
       return listaSeguidores;
     })
+    .catch((error) => {
+      console.error(error);
+    })
   const following = await fetch(`${baseURL}/following`)
     .then((resposta) => {
       if(resposta.ok) {
@@ -142,6 +145,9 @@ export async function getStaticProps() {
       })
       return listaSeguindo;
       })
+    .catch((error) => {
+      console.error(error);
+    })
   const userCommunity = await fetch(`${baseURL}/starred`)
     .then((resposta) => {
       if(resposta.ok) {
