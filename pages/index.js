@@ -12,8 +12,6 @@ export default function Home(props) {
   const baseURL = `https://api.github.com/users/${fixedUser}`;
   const name = props.userData.name;
   const [seguidores, setSeguidores] = React.useState([]);
-  const [seguindo, setSeguindo] = React.useState([]);
-  const [comunidades, setComunidades] = React.useState([]);
   React.useEffect(() => {
     fetch(`${baseURL}/followers`)
       .then((resposta) => {
@@ -40,6 +38,7 @@ export default function Home(props) {
         console.error(error);
       })
   }, [])
+  const [seguindo, setSeguindo] = React.useState([]);
   React.useEffect(() => {
     fetch(`${baseURL}/following`)
     .then((resposta) => {
@@ -66,6 +65,7 @@ export default function Home(props) {
         console.error(error);
       })
   }, [])
+  const [comunidades, setComunidades] = React.useState([]);
   React.useEffect(() => {
     fetch(`${baseURL}/starred`)
     .then((resposta) => {
