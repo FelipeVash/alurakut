@@ -39,6 +39,8 @@ export default function Home(props) {
       .catch((error) => {
         console.error(error);
       })
+  }, [])
+  React.useEffect(() => {
     fetch(`${baseURL}/following`)
     .then((resposta) => {
       if(resposta.ok) {
@@ -63,6 +65,8 @@ export default function Home(props) {
       .catch((error) => {
         console.error(error);
       })
+  }, [])
+  React.useEffect(() => {
     fetch(`${baseURL}/starred`)
     .then((resposta) => {
       if(resposta.ok) {
@@ -87,60 +91,7 @@ export default function Home(props) {
     .catch((error) => {
       console.error(error);
     })
-  }, [])
-
-  // React.useEffect(() => {
-  //   fetch(`${baseURL}/following`)
-  //   .then((resposta) => {
-  //     if(resposta.ok) {
-  //       return resposta.json();
-  //     }
-  //     throw new Error('Aconteceu algum problema :(' + resposta.status)
-  //   })
-  //   .then((resposta) => {
-  //     const listaSeguindo = [];
-  //     resposta.map((user) => {
-  //       const userList = {
-  //         id: user.id,
-  //         title: user.login,
-  //         login: user.login,
-  //         image: user.avatar_url,
-  //         url: `https://github.com/${user.login}`,
-  //       }
-  //       listaSeguindo.push(userList);
-  //     })
-  //     setSeguindo(listaSeguindo);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     })
-  // }, [])
-  // React.useEffect(() => {
-  //   fetch(`${baseURL}/starred`)
-  //   .then((resposta) => {
-  //     if(resposta.ok) {
-  //       return resposta.json();
-  //     }
-  //     throw new Error('Aconteceu algum problema :(' + resposta.status)
-  //   })
-  //   .then((resposta) => {
-  //     const comunidadesList = [];
-  //     resposta.map((community) => {
-  //       const comunidadeGitHub = {
-  //         id: community.id,
-  //         title: community.name,
-  //         login: community.owner.login,
-  //         image: community.owner.avatar_url,
-  //         url: `https://github.com/${community.owner.login}/${community.name}`,
-  //       }
-  //       comunidadesList.push(comunidadeGitHub);
-  //     })
-  //     setComunidades(comunidadesList);
-  //   })
-  //   .catch((error) => {
-  //     console.error(error);
-  //   })
-  // }, []);
+  }, []);
 
   return (
     <>
