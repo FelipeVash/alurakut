@@ -14,7 +14,7 @@ export default function ProfileRelationsBox({title, items}) {
             return (
               <li  key={itemAtual.id}>
                 <a href={itemAtual.url}>
-                  <img src={`${itemAtual.avatar_url}`} />
+                  <img src={itemAtual.avatar_url} />
                   <span>{itemAtual.login}</span>
                 </a>
               </li>

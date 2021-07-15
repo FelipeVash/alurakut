@@ -5,6 +5,7 @@ import AlurakutMenu from '../src/components/commons/Menu'
 import OrkutNostalgicIconSet from '../src/components/commons/IconSet';
 import ProfileSidebar from '../src/components/Profile/ProfileSidebar';
 import ProfileRelationsBox from '../src/components/Profile/ProfileRelations/box';
+import { loadGetInitialProps } from 'next/dist/next-server/lib/utils';
 
 const fixedUser = 'felipevash';
 
@@ -38,12 +39,20 @@ export default function Home(props) {
       return respostaDoServidor.json();
     })
     .then(function(respostaCompleta) {
-      respostaCompleta.map((resposta) => {
-        respostaCompleta.push(resposta.owner.avatar_url)
+      const lists = [];
+      respostaCompleta.map((item) => {
+        const list = {
+          id: item.id,
+          url: item.html_url,
+          avatar_url: item.owner.avatar_url,
+          login: item.name,
+        }
+        lists.push(list);
       })
-      setComunidades(respostaCompleta);
+      setComunidades(lists);
     })
   }, [])
+
   return (
     <>
       <AlurakutMenu githubUser={fixedUser} name={name}/>
