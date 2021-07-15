@@ -2,48 +2,61 @@ import React from 'react';
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/foundation/Box'
 import AlurakutMenu from '../src/components/commons/Menu'
-import AlurakutProfileSidebarMenuDefault from '../src/components/commons/Menu/Default'
 import OrkutNostalgicIconSet from '../src/components/commons/IconSet';
-import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
+import ProfileSidebar from '../src/components/Profile/ProfileSidebar';
+import ProfileRelationsBox from '../src/components/Profile/ProfileRelations/box';
+import { loadGetInitialProps } from 'next/dist/next-server/lib/utils';
 
 const fixedUser = 'felipevash';
 
-function ProfileSidebar(props) {
-  const name = props.name;
-  return (
-    <Box as="aside">
-      <img src={`https://github.com/${props.githubUser}.png`} style={{ borderRadius: '8px' }} />
-      <hr />
-      <p>
-        <a className="boxLink" href={`https://github.com/${props.githubUser}`}>
-          {name}
-        </a>
-      </p>
-      <hr />
-      <AlurakutProfileSidebarMenuDefault githubUser={fixedUser} name={name} />
-    </Box>
-  )
-}
-
 export default function Home(props) {
+  const baseURL = `https://api.github.com/users/${fixedUser}`;
   const name = props.userData.name;
-  const comunidadesGitHub = props.userCommunity;
-  const [comunidades, setComunidades] = React.useState([{
-    id: 1,
-    title: 'Eu odeio acordar cedo',
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }, ...comunidadesGitHub]);
-  const listaSeguidores = props.followers.map((seguidor) => {
-    const lista = [];
-    lista.push(seguidor.login)
-    return lista
-  });
+  const [seguidores, setSeguidores] = React.useState([]);
+  const [seguindo, setSeguindo] = React.useState([]);
+  const [comunidades, setComunidades] = React.useState([]);
+  React.useEffect(function() {
+    fetch(`${baseURL}/followers`)
+    .then(function (respostaDoServidor) {
+      return respostaDoServidor.json();
+    })
+    .then(function(respostaCompleta) {
+      setSeguidores(respostaCompleta);
+    })
+  }, [])
+  React.useEffect(function() {
+    fetch(`${baseURL}/following`)
+    .then(function (respostaDoServidor) {
+      return respostaDoServidor.json();
+    })
+    .then(function(respostaCompleta) {
+      setSeguindo(respostaCompleta);
+    })
+  }, [])
+  React.useEffect(function() {
+    fetch(`${baseURL}/starred`)
+    .then(function (respostaDoServidor) {
+      return respostaDoServidor.json();
+    })
+    .then(function(respostaCompleta) {
+      const lists = [];
+      respostaCompleta.map((item) => {
+        const list = {
+          id: item.id,
+          url: item.html_url,
+          avatar_url: item.owner.avatar_url,
+          login: item.name,
+        }
+        lists.push(list);
+      })
+      setComunidades(lists);
+    })
+  }, [])
 
   return (
     <>
       <AlurakutMenu githubUser={fixedUser} name={name}/>
       <MainGrid>
-        {/* <Box style="grid-area: profileArea;"> */}
         <div className="profileArea" style={{ gridArea: 'profileArea' }}>
           <ProfileSidebar githubUser={fixedUser} key={fixedUser} name={name}/>
         </div>
@@ -53,7 +66,7 @@ export default function Home(props) {
               Bem vindo(a), {name}
             </h1>
 
-            <OrkutNostalgicIconSet />
+            <OrkutNostalgicIconSet fas={seguidores.length}/>
           </Box>
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
@@ -63,7 +76,9 @@ export default function Home(props) {
               const comunidade = {
                 id: new Date().toISOString(),
                 title: dadosDoForm.get('title'),
+                login: {fixedUser},
                 image: dadosDoForm.get('image'),
+                url: dadosDoForm.get('url'),
               }
               const comunidadesAtualizadas = [comunidade, ...comunidades];
               setComunidades(comunidadesAtualizadas);
@@ -83,6 +98,13 @@ export default function Home(props) {
                   aria-label="Coloque uma URL para usarmos de capa"
                 />
               </div>
+              <div>
+                <input 
+                  placeholder="Coloque o link para comunidade"
+                  name="url"
+                  aria-label="Coloque o link para comunidade"
+                />
+              </div>
               <button>
                 Criar comunidade
               </button>
@@ -90,46 +112,9 @@ export default function Home(props) {
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Amigos ({listaSeguidores.length})
-            </h2>
-            <ul>
-              {listaSeguidores.map((itemAtual, i = 0) => {
-                if(i < 6){
-                  i++
-                  return (
-                    <li  key={itemAtual}>
-                      <a href={`/users/${itemAtual}`}>
-                        <img src={`https://github.com/${itemAtual}.png`} />
-                        <span>{itemAtual}</span>
-                      </a>
-                    </li>
-                  )
-                }
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Comunidades ({comunidades.length})
-            </h2>
-            <ul>
-              {comunidades.map((itemAtual, i = 0) => {
-                if(i < 6) {
-                  i++
-                  return (
-                    <li  key={itemAtual.id}>
-                      <a href={`/user/${itemAtual.title}`}>
-                        <img src={itemAtual.image} />
-                        <span>{itemAtual.title}</span>
-                      </a>
-                    </li>
-                  )
-                }
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
+          <ProfileRelationsBox title="Seguidores" items={seguidores} />
+          <ProfileRelationsBox title="Seguindo" items={seguindo} />
+          <ProfileRelationsBox title="Comunidades" items={comunidades} />
         </div>
       </MainGrid>
     </>
@@ -137,38 +122,21 @@ export default function Home(props) {
 }
 
 export async function getStaticProps() {
-  const followers = await fetch(`https://api.github.com/users/${fixedUser}/followers`)
+  const baseURL = `https://api.github.com/users/${fixedUser}`;
+  const userData = await fetch(`${baseURL}`)
       .then((resposta) => {
-        return resposta.json();
+        if(resposta.ok) {
+          return resposta.json();
+        }
+        throw new Error('Aconteceu algum problema :(' + resposta.status)
       })
-  const userData = await fetch(`https://api.github.com/users/${fixedUser}`)
-      .then((resposta) => {
-        return resposta.json();
-      })
-  const userCommunity = await fetch(`https://api.github.com/users/${fixedUser}/starred`)
-      .then((resposta) => {
-        const respostaConvertida = resposta.json();
-        return respostaConvertida
-      })
-      .then((respostaConvertida) => {
-        const comunidadesGitHub = [];
-        respostaConvertida.map((community) => {
-          let comunidadeGitHub = {
-            id: community.id,
-            title: community.name,
-            image: community.owner.avatar_url
-          }
-          comunidadesGitHub.push(comunidadeGitHub);
-          return comunidadesGitHub;
-        })
-        return comunidadesGitHub;
+      .catch((error) => {
+        console.error(error);
       })
 
   return {
     props: {
-      followers: followers,
       userData: userData,
-      userCommunity: userCommunity
     },
   }
 }
