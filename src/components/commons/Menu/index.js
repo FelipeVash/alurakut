@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import AlurakutMenuProfileSidebar from './ProfileSideBar'
+import AlurakutMenuProfileSidebar from './MenuProfileSideBar'
 import Link from '../Link';
 
 const BASE_URL = 'http://alurakut.vercel.app/';

@@ -1,21 +1,21 @@
 import React from 'react';
 import { ProfileRelationsBoxWrapper } from '../wrapper';
 
-export default function ProfileRelationsBox(props) {
+export default function ProfileRelationsBox({title, items}) {
   return (
     <ProfileRelationsBoxWrapper>
       <h2 className="smallTitle">
-        {props.title} ({props.items.length})
+        {title} ({items.length})
       </h2>
       <ul>
-        {props.items.map((itemAtual, i = 0) => {
+        {items.map((itemAtual, i = 0) => {
           if(i < 6){
             i++
             return (
               <li  key={itemAtual.id}>
                 <a href={itemAtual.url}>
-                  <img src={`${itemAtual.image}`} />
-                  <span>{itemAtual.title}</span>
+                  <img src={`${itemAtual.avatar_url}`} />
+                  <span>{itemAtual.login}</span>
                 </a>
               </li>
             )
