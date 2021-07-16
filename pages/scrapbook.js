@@ -79,6 +79,7 @@ export default function Home(props) {
       })
       setComunidadesDato(comunidadesDato);
     })
+
     fetch('https://graphql.datocms.com/', {
       method: 'POST',
       headers: {
@@ -126,64 +127,84 @@ export default function Home(props) {
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box>
             <h1 className="title">
-              Bem vindo(a), {name}
+              Recados
             </h1>
-
-            <OrkutNostalgicIconSet fas={seguidores.length} recados={recados.length}/>
-          </Box>
-          <Box>
-            <h2 className="subTitle">O que você deseja fazer?</h2>
-            <form onSubmit={function handleCriarComunidade(e) {
+            <h2 className="subTitle">Diga o que achou do projeto!</h2>
+            <form onSubmit={function handleCriarRecado(e) {
               e.preventDefault();
               const dadosDoForm = new FormData(e.target);
-              const comunidade = {
-                title: dadosDoForm.get('title'),
-                imageUrl: dadosDoForm.get('image'),
-                creatorSlug: fixedUser,
-                url: dadosDoForm.get('url')
+              const recado = {
+                name: dadosDoForm.get('name'),
+                message: dadosDoForm.get('message'),
+                user: dadosDoForm.get('user'),
+                creation_date: new Date()
               }
 
-              fetch('/api/comunidades', {
+              fetch('/api/scraps', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(comunidade)
+                body: JSON.stringify(recado)
               })
               .then(async (res) => {
                 const dados = await res.json();
-                const comunidade = dados.registroCriado
-                const comunidadesAtualizadas = [comunidade, ...comunidades];
-                setComunidades(comunidadesAtualizadas);
+                const recado = dados.registroCriado
+                const recadosAtualizados = [recado, ...recados];
+                setRecados(recadosAtualizados);
               })
 
             }}>
               <div>
                 <input 
-                  placeholder="Qual vai ser o nome da sua comunidade?"
-                  name="title"
-                  aria-label="Qual vai ser o nome da sua comunidade?"
+                  placeholder="Qual seu nome?"
+                  name="name"
+                  aria-label="Qual seu nome?"
                   type="text"
                 />
               </div>
               <div>
                 <input 
-                  placeholder="Coloque uma URL para usarmos de capa"
-                  name="image"
-                  aria-label="Coloque uma URL para usarmos de capa"
+                  placeholder="Qual sua @?"
+                  name="user"
+                  aria-label="Qual sua @?"
+                  type="text"
                 />
               </div>
               <div>
                 <input 
-                  placeholder="Coloque o link para comunidade"
-                  name="url"
-                  aria-label="Coloque o link para comunidade"
+                  placeholder="Deixe seu recado!"
+                  name="message"
+                  aria-label="Deixe seu recado!"
+                  type="text"
                 />
               </div>
               <button>
-                Criar comunidade
+                Enviar Recado
               </button>
             </form>
+          </Box>
+          <Box>
+            <h2 className="subTitle">Olha a galera comentando!</h2>
+            <ul>
+              {recados.map((recado, i = 0) => {
+                if(i < 3) {
+                  return (
+                    <li  key={recado.id}>
+                      <div className='divScrap'>
+                        <a href={`https://github.com/user/${recado.user}`}> 
+                          <img src={`https://github.com/${recado.user}.png`} />
+                        </a>
+                        <div className='scrapText'>
+                          <h3> {recado.creation_date}{recado.name}: </h3>
+                          <p>{recado.message}</p>
+                        </div>
+                      </div>
+                    </li>
+                  )
+                }
+              })}
+            </ul>
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
