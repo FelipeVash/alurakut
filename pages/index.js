@@ -232,11 +232,12 @@ export async function getServerSideProps(context) {
       return true
     }
   })
-  
-  return {
-    props: {
-      githubUser: githubUser,
-      isAuthenticated: isAuthenticated
-    },
+  if(isTrueUser) {
+    return {
+      props: {
+        githubUser: githubUser,
+        isAuthenticated: isAuthenticated
+      },
+    }
   }
 }
