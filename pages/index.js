@@ -232,7 +232,7 @@ export async function getServerSideProps(context) {
       return true
     }
   })
-  if(isTrueUser) {
+  if(!isTrueUser) {
     return {
       redirect: {
         destination: '/login',
