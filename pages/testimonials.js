@@ -7,7 +7,7 @@ import ProfileRelationsBox from '../src/components/Profile/ProfileRelations/box'
 
 const fixedUser = 'felipevash';
 
-export default function Scrapbook(props) {
+export default function Testimonials(props) {
   const baseURL = `https://api.github.com/users/${fixedUser}`;
   const name = props.userData.name;
   const [seguidores, setSeguidores] = React.useState([]);
@@ -125,9 +125,9 @@ export default function Scrapbook(props) {
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box>
             <h1 className="title">
-              Recados
+              Depoimentos
             </h1>
-            <h2 className="subTitle">Diga o que achou do projeto!</h2>
+            <h2 className="subTitle">Jura dizer a verdade, nada mais que a verdade?</h2>
             <form onSubmit={function handleCriarRecado(e) {
               e.preventDefault();
               const dadosDoForm = new FormData(e.target);
@@ -178,12 +178,12 @@ export default function Scrapbook(props) {
                 />
               </div>
               <button>
-                Enviar Recado
+                Enviar Depoimento
               </button>
             </form>
           </Box>
           <Box>
-            <h2 className="subTitle">Olha a galera comentando!</h2>
+            <h2 className="subTitle">Olha quem está depondo contra mim!</h2>
             <ul>
               {recados.map((recado, i = 0) => {
                 var avatarUrl = (recado.user === '') ? 'https://lh3.googleusercontent.com/proxy/MY05_OTZxjO_ewYvC_4mmSnp5wgKlRmOcU7wgaS2dZseiMBkGg21-gqRroQ1zsei_xUxxt62qBLfPHy6XBeRytvu3UwsnPaYH76MFJkbFDGN9kmTQhFaGw' : `https://github.com/${recado.user}.png`;

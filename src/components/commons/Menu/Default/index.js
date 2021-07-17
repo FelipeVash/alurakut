@@ -15,18 +15,18 @@ export default function AlurakutProfileSidebarMenuDefault() {
             <img src={`${BASE_URL}/icons/book.svg`} />
               Recados
             </a>
-          <a href="/">
+          <a href="/photobook">
             <img src={`${BASE_URL}/icons/camera.svg`} />
               Fotos
             </a>
-          <a href="/">
+          <a href="/testimonials">
             <img src={`${BASE_URL}/icons/sun.svg`} />
               Depoimentos
             </a>
         </nav>
         <hr />
         <nav>
-          <a href="/">
+          <a href="https://github.com/trending">
             <img src={`${BASE_URL}/icons/plus.svg`} />
               GitHub Trends
             </a>

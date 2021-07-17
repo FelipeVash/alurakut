@@ -326,8 +326,8 @@ OrkutNostalgicIconSet.List = styled.ul`
 const AlurakutLoginScreen = css`
   :root {
     --backgroundPrimary: #D9E6F6;
-    --backgroundSecondary: #F1F9FE;
-    --backgroundTertiary: #FFFFFF;
+    --backgroundSecondary: #292929;
+    --backgroundTertiary: #191919;
     --backgroundQuarternary: #BBCDE8;
     --colorPrimary: #2E7BB4;
     --colorSecondary: #388BB0;
@@ -375,6 +375,7 @@ const AlurakutLoginScreen = css`
         min-height: 368px;
       }
       p {
+        color: #FFFFFF;
         font-size: 12px;
         line-height: 1.2;
         &:not(:last-child) {
@@ -403,7 +404,7 @@ const AlurakutLoginScreen = css`
         padding: var(--gutter);
         padding-left: 50px;
         padding-right: 50px;
-        background-color: var(--backgroundSecondary);
+        background-color: var(--backgroundTertiary);
         border-radius: var(--commonRadius);
         flex: 1;
         &:not(:last-child) {
@@ -416,6 +417,7 @@ const AlurakutLoginScreen = css`
           }
         }
         p {
+          color: #FFFFFF;
           font-size: 14px;
         }
         a {
@@ -423,13 +425,20 @@ const AlurakutLoginScreen = css`
           color: var(--colorPrimary);
         }
         input {
+          color: #FFFFFF;
           width: 100%;
           display: block;
           border: 1px solid var(--textQuarternaryColor);
           padding: 12px;
-          background-color: var(--backgroundTertiary);
+          background-color: var(--backgroundSecondary);
           border-radius: var(--commonRadius);
           margin-top: 24px;
+          margin-bottom: 16px;
+          
+        }
+        span {
+          font-size: 12px;
+          color:red;
           margin-bottom: 16px;
         }
         button {
@@ -438,17 +447,18 @@ const AlurakutLoginScreen = css`
           border: 0;
           padding: 12px;
           border-radius: var(--commonRadius);
-          background-color: var(--colorPrimary);
+          background-color: var(--colorSecondary);
           color: var(--textSecondaryColor);
         }
       }
     }
     .footerArea {
       grid-area: footerArea;
-      background-color: var(--backgroundQuarternary);
+      background-color: var(--backgroundTertiary);
       border-radius: var(--commonRadius);
       padding: 8px;
       p {
+        color: #FFFFFF;
         font-size: 12px;
         text-align: center;
         a {
