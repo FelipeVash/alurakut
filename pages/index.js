@@ -217,11 +217,17 @@ export async function getServerSideProps(context) {
         return true
       }
   })
+  const { isAuthenticated } = await fetch(`https://alurakut.vercel.app/api/auth`, {
+    headers: {
+      Authorization: token
+    }
+  })
+  .then((resposta) => resposta.json())
 
-  if(!isTrueUser) {
+  if(!isAuthenticated && !isTrueUser) {
     return {
       redirect: {
-        destination: 'login',
+        destination: '/login',
         permanent: false,
       }
     }
