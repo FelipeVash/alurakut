@@ -224,7 +224,7 @@ export async function getServerSideProps(context) {
   })
   .then((resposta) => resposta.json())
 
-  if(!isAuthenticated && !isTrueUser) {
+  if(!isAuthenticated) {
     return {
       redirect: {
         destination: '/login',
@@ -236,7 +236,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       githubUser: githubUser,
-      isAuthenticated: isTrueUser
+      isAuthenticated: isAuthenticated
     },
   }
 }
