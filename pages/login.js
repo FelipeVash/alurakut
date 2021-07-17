@@ -6,6 +6,7 @@ import nookies from 'nookies';
 export default function LoginScreen() {
   const router = useRouter();
   const [githubUser, setGithubUser] = React.useState('');
+  const [isTrueUser, setIsTrueUser] = React.useState(true);
 
   return (
     <main style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -21,8 +22,6 @@ export default function LoginScreen() {
         <section className="formArea">
           <form className="box" onSubmit={(infosDoEvento) => {
                 infosDoEvento.preventDefault();
-                // alert('Alguém clicou no botão!')
-                console.log('Usuário: ', githubUser)
                 fetch('https://alurakut.vercel.app/api/login', {
                     method: 'POST',
                     headers: {
@@ -39,6 +38,15 @@ export default function LoginScreen() {
                     })
                     router.push('/')
                 })
+                // fetch(`https://github.com/${githubUser}`)
+                // .then(async function(resposta) {
+                //   console.log(resposta);
+                //   if(resposta.status === 404){
+                //     setIsTrueUser(false)
+                //   } else {
+                //     setIsTrueUser(true)
+                //   }
+                // })
           }}>
             <p>
               Acesse agora mesmo com seu usuário do <strong>GitHub</strong>!
@@ -53,6 +61,9 @@ export default function LoginScreen() {
             {githubUser.length === 0
                 ? <span>Preencha o campo</span>
                 : ''
+            }
+            {
+              isTrueUser === false? <span>Usuario Inválido</span> : ''
             }
             <button type="submit">
               Login

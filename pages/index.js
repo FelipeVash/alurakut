@@ -243,7 +243,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       githubUser: githubUser,
-      isAuthenticated: isAuthenticated
+      isAuthenticated: isAuthenticated,
+      isTrueUser: isTrueUser
     },
   }
 }
