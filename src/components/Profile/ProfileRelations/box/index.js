@@ -1,11 +1,12 @@
 import React from 'react';
 import { ProfileRelationsBoxWrapper } from '../wrapper';
 
-export default function ProfileRelationsBox({title, items}) {
+export default function ProfileRelationsBox({title, items, numbers}) {
+  const titleLower = title.toLowerCase();
   return (
     <ProfileRelationsBoxWrapper>
       <h2 className="smallTitle">
-        {title} ({items.length})
+        {title} ({numbers})
       </h2>
       <ul>
         {items.map((itemAtual, i = 0) => {
@@ -21,6 +22,9 @@ export default function ProfileRelationsBox({title, items}) {
             )
           }
         })}
+        <a href={`/${titleLower}`}>
+          <p>Ver Todos</p>
+        </a>
       </ul>
     </ProfileRelationsBoxWrapper>
   )
