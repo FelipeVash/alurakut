@@ -208,14 +208,12 @@ export default function Home(props) {
 export async function getServerSideProps(context) {
   const cookies = nookies.get(context);
   const token = cookies.USER_TOKEN;
-  const { githubUser } = jwt.decode(token);
-  const isTrueUser = await fetch(`https://github.com/${githubUser}`)
   .then(async function(resposta) {
-      if(resposta.status === 404){
-        return false
-      } else {
-        return true
-      }
+    if(resposta.status === 404){
+      return false
+    } else {
+      return true
+    }
   })
   const { isAuthenticated } = await fetch(`https://alurakut.vercel.app/api/auth`, {
     headers: {
@@ -223,7 +221,7 @@ export async function getServerSideProps(context) {
     }
   })
   .then((resposta) => resposta.json())
-
+  
   if(!isAuthenticated) {
     return {
       redirect: {
@@ -232,7 +230,9 @@ export async function getServerSideProps(context) {
       }
     }
   }
-
+  const { githubUser } = jwt.decode(token);
+  const isTrueUser = await fetch(`https://github.com/${githubUser}`)
+  
   return {
     props: {
       githubUser: githubUser,
