@@ -16,9 +16,7 @@ export default function Home(props) {
   const [seguidores, setSeguidores] = React.useState([]);
   const [seguindo, setSeguindo] = React.useState([]);
   const [comunidades, setComunidades] = React.useState([]);
-  const [comunidadesDato, setComunidadesDato] = React.useState([]);
   const [recados, setRecados] = React.useState([]);
-  const somaComunidades = [...comunidadesDato, ...comunidades];
 
   React.useEffect(function() {
     fetch(`${baseURL}`)
@@ -36,23 +34,6 @@ export default function Home(props) {
       const respostaCompleta = await respostaDoServidor.json();
       setSeguindo(respostaCompleta);
     })
-
-    fetch(`${baseURL}/starred`)
-    .then(async function (respostaDoServidor) {
-      const respostaCompleta = await respostaDoServidor.json();
-      const lists = [];
-      respostaCompleta.map((item) => {
-        const list = {
-          id: item.id,
-          url: item.html_url,
-          avatar_url: item.owner.avatar_url,
-          login: item.name,
-        }
-        lists.push(list);
-      })
-      setComunidades(lists);
-    })
-
     fetch('https://graphql.datocms.com/', {
       method: 'POST',
       headers: {
@@ -84,7 +65,7 @@ export default function Home(props) {
         }
         comunidadesDato.push(list);
       })
-      setComunidadesDato(comunidadesDato);
+      setComunidades(comunidadesDato);
     })
     fetch('https://graphql.datocms.com/', {
       method: 'POST',
@@ -160,7 +141,7 @@ export default function Home(props) {
                   .then(async (res) => {
                     const dados = await res.json();
                     const comunidade = dados.registroCriado
-                    const comunidadesAtualizadas = [comunidade, ...comunidades];
+                    const comunidadesAtualizadas = [comunidade];
                     setComunidades(comunidadesAtualizadas);
                   })
 
@@ -198,7 +179,7 @@ export default function Home(props) {
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
           <ProfileRelationsBox title="Seguidores" items={seguidores} numbers={userData.followers} />
           <ProfileRelationsBox title="Seguindo" items={seguindo} numbers={userData.following} />
-          <ProfileRelationsBox title="Comunidades" items={somaComunidades} numbers={somaComunidades.length} />
+          <ProfileRelationsBox title="Comunidades" items={comunidades} numbers={comunidades.length} />
         </div>
       </MainGrid>
     </>

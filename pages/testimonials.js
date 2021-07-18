@@ -13,9 +13,7 @@ export default function Testimonials(props) {
   const [seguidores, setSeguidores] = React.useState([]);
   const [seguindo, setSeguindo] = React.useState([]);
   const [comunidades, setComunidades] = React.useState([]);
-  const [comunidadesDato, setComunidadesDato] = React.useState([]);
-  const [recados, setRecados] = React.useState([]);
-  const somaComunidades = [...comunidadesDato, ...comunidades];
+  const [depoimentos, setDepoimentos] = React.useState([]);
 
   React.useEffect(function() {
     fetch(`${baseURL}/followers`)
@@ -76,7 +74,7 @@ export default function Testimonials(props) {
         }
         comunidadesDato.push(list);
       })
-      setComunidadesDato(comunidadesDato);
+      setComunidades(comunidadesDato);
     })
 
     fetch('https://graphql.datocms.com/', {
@@ -88,7 +86,7 @@ export default function Testimonials(props) {
       },
       body: JSON.stringify({
         "query": `query {
-          allScraps {
+          allTestimonials {
             id
             name
             message
@@ -99,19 +97,18 @@ export default function Testimonials(props) {
     })
     .then((res) => res.json())
     .then(function(resComplete) {
-      const lista = resComplete.data.allScraps;
-      const recadosDato = [];
-      lista.map((recado) => {
+      const lista = resComplete.data.allTestimonials;
+      const depoimentosDato = [];
+      lista.map((depoimento) => {
         const list = {
-          id: recado.id,
-          name: recado.name,
-          message: recado.message,
-          user: recado.user,
-          creation_date: recado.creation_date
+          id: depoimento.id,
+          name: depoimento.name,
+          message: depoimento.message,
+          user: depoimento.user,
         }
-        recadosDato.push(list);
+        depoimentosDato.push(list);
       })
-      setRecados(recadosDato);
+      setDepoimentos(depoimentosDato);
     })
   }, [])
 
@@ -128,28 +125,27 @@ export default function Testimonials(props) {
               Depoimentos
             </h1>
             <h2 className="subTitle">Jura dizer a verdade, nada mais que a verdade?</h2>
-            <form onSubmit={function handleCriarRecado(e) {
+            <form onSubmit={function handleCriarDepoimento(e) {
               e.preventDefault();
               const dadosDoForm = new FormData(e.target);
-              const recado = {
+              const depoimento = {
                 name: dadosDoForm.get('name'),
                 message: dadosDoForm.get('message'),
                 user: dadosDoForm.get('user'),
-                creation_date: new Date()
               }
 
-              fetch('/api/scraps', {
+              fetch('/api/testimonials', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(recado)
+                body: JSON.stringify(depoimento)
               })
               .then(async (res) => {
                 const dados = await res.json();
-                const recado = dados.registroCriado
-                const recadosAtualizados = [recado, ...recados];
-                setRecados(recadosAtualizados);
+                const depoimento = dados.registroCriado
+                const depoimentosAtualizados = [depoimento, ...depoimentos];
+                setDepoimentos(depoimentosAtualizados);
               })
 
             }}>
@@ -185,19 +181,19 @@ export default function Testimonials(props) {
           <Box>
             <h2 className="subTitle">Olha quem está depondo contra mim!</h2>
             <ul>
-              {recados.map((recado, i = 0) => {
-                var avatarUrl = (recado.user === '') ? 'https://lh3.googleusercontent.com/proxy/MY05_OTZxjO_ewYvC_4mmSnp5wgKlRmOcU7wgaS2dZseiMBkGg21-gqRroQ1zsei_xUxxt62qBLfPHy6XBeRytvu3UwsnPaYH76MFJkbFDGN9kmTQhFaGw' : `https://github.com/${recado.user}.png`;
-                var userUrl = (recado.user === '') ? '' : `https://github.com/user/${recado.user}`;
+              {depoimentos.map((depoimento, i = 0) => {
+                var avatarUrl = (depoimento.user === '') ? 'https://lh3.googleusercontent.com/proxy/MY05_OTZxjO_ewYvC_4mmSnp5wgKlRmOcU7wgaS2dZseiMBkGg21-gqRroQ1zsei_xUxxt62qBLfPHy6XBeRytvu3UwsnPaYH76MFJkbFDGN9kmTQhFaGw' : `https://github.com/${depoimento.user}.png`;
+                var userUrl = (depoimento.user === '') ? '' : `https://github.com/user/${depoimento.user}`;
                 if(i < 3) {
                   return (
-                    <li  key={recado.id}>
+                    <li  key={depoimento.id}>
                       <div className='divScrap'>
                         <a href={userUrl}> 
                           <img src={avatarUrl} />
                         </a>
                         <div className='scrapText'>
-                          <h3> {recado.creation_date}{recado.name}: </h3>
-                          <p>{recado.message}</p>
+                          <h3> {depoimento.name}: </h3>
+                          <p>{depoimento.message}</p>
                         </div>
                       </div>
                     </li>
@@ -210,7 +206,7 @@ export default function Testimonials(props) {
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
           <ProfileRelationsBox title="Seguidores" items={seguidores} numbers={props.userData.followers} />
           <ProfileRelationsBox title="Seguindo" items={seguindo} numbers={props.userData.following} />
-          <ProfileRelationsBox title="Comunidades" items={somaComunidades} numbers={somaComunidades.length} />
+          <ProfileRelationsBox title="Comunidades" items={comunidades} numbers={comunidades.length} />
         </div>
       </MainGrid>
     </>

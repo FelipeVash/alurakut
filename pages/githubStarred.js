@@ -1,21 +1,29 @@
 import React from 'react';
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/foundation/Box'
 import AlurakutMenu from '../src/components/commons/Menu'
 import ProfileSidebar from '../src/components/Profile/ProfileSidebar';
 import ProfileRelationsBox from '../src/components/Profile/ProfileRelations/box';
 
-const fixedUser = 'felipevash';
 
-export default function Amigos(props) {
+export default function githubStarred(props) {
+  const fixedUser = props.githubUser;
   const baseURL = `https://api.github.com/users/${fixedUser}`;
-  const name = props.userData.name;
+  const [userData, setUserData] = React.useState([]);
   const [seguidores, setSeguidores] = React.useState([]);
   const [seguindo, setSeguindo] = React.useState([]);
+  const [githubStarred, setGithubStarred] = React.useState([]);
   const [comunidades, setComunidades] = React.useState([]);
 
   React.useEffect(function() {
-    fetch(`${baseURL}/followers?per_page=15&page=1`)
+    fetch(`${baseURL}`)
+    .then(async function (respostaDoServidor) {
+      const respostaCompleta = await respostaDoServidor.json();
+      setUserData(respostaCompleta);
+    })
+    fetch(`${baseURL}/followers`)
     .then(async function (respostaDoServidor) {
       const respostaCompleta = await respostaDoServidor.json();
       setSeguidores(respostaCompleta);
@@ -39,7 +47,7 @@ export default function Amigos(props) {
         }
         lists.push(list);
       })
-      setComunidades(lists);
+      setGithubStarred(lists);
     })
 
     fetch('https://graphql.datocms.com/', {
@@ -79,20 +87,20 @@ export default function Amigos(props) {
 
   return (
     <>
-      <AlurakutMenu githubUser={fixedUser} name={name}/>
+      <AlurakutMenu githubUser={fixedUser} name={userData.name}/>
       <MainGrid>
         <div className="profileArea" style={{ gridArea: 'profileArea' }}>
-          <ProfileSidebar githubUser={fixedUser} key={fixedUser} name={name}/>
+          <ProfileSidebar githubUser={fixedUser} key={fixedUser} name={userData.name}/>
         </div>
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
-          <Box>
+        <Box>
             <h1 className="title">
-              Lista de Amigos
+              Projetos Favoritos no Github
             </h1>
-            <h2 className="subTitle">Eu sou legal! Eles juram!</h2>
+            <h2 className="subTitle">"Nada se cria..."</h2>
             <hr/>
             <ul className="photoBox">
-              {seguidores.map((itemAtual) => {
+              {githubStarred.map((itemAtual) => {
                 return (
                   <li  key={itemAtual.id}>
                     <a href={itemAtual.url}>
@@ -108,8 +116,8 @@ export default function Amigos(props) {
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-          <ProfileRelationsBox title="Seguidores" items={seguidores} numbers={props.userData.followers} />
-          <ProfileRelationsBox title="Seguindo" items={seguindo} numbers={props.userData.following} />
+          <ProfileRelationsBox title="Seguidores" items={seguidores} numbers={userData.followers} />
+          <ProfileRelationsBox title="Seguindo" items={seguindo} numbers={userData.following} />
           <ProfileRelationsBox title="Comunidades" items={comunidades} numbers={comunidades.length} />
         </div>
       </MainGrid>
@@ -117,22 +125,46 @@ export default function Amigos(props) {
   )
 }
 
-export async function getStaticProps() {
-  const baseURL = `https://api.github.com/users/${fixedUser}`;
-  const userData = await fetch(`${baseURL}`)
-      .then((resposta) => {
-        if(resposta.ok) {
-          return resposta.json();
-        }
-        throw new Error('Aconteceu algum problema :(' + resposta.status)
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context);
+  const token = cookies.USER_TOKEN;
+  const { isAuthenticated } = await fetch(`https://alurakut.vercel.app/api/auth`, {
+    headers: {
+      Authorization: token
+    }
+  })
+  .then((resposta) => resposta.json())
+  
+  if(!isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }
+  }
+  const { githubUser } = jwt.decode(token);
+  const isTrueUser = await fetch(`https://github.com/${githubUser}`)
+  .then(async function(resposta) {
+    if(resposta.status === 404){
+      return false
+    } else {
+      return true
+    }
+  })
+  if(!isTrueUser) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }
+  }
   return {
     props: {
-      userData: userData,
+      githubUser: githubUser,
+      isAuthenticated: isAuthenticated,
+      isTrueUser: isTrueUser
     },
   }
 }

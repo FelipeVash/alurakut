@@ -29,11 +29,15 @@ export default function AlurakutProfileSidebarMenuDefault() {
           <a href="https://github.com/trending">
             <img src={`${BASE_URL}/icons/plus.svg`} />
               GitHub Trends
-            </a>
+          </a>
+          <a href="/githubStarred">
+            <img src={`https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png`} />
+              Favoritos do GitHub
+          </a>
           <a href="/logout">
             <img src={`${BASE_URL}//icons/logout.svg`} />
               Sair
-            </a>
+          </a>
         </nav>
       </AlurakutProfileSidebarMenuDefault.Wrapper>
     )

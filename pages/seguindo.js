@@ -87,12 +87,12 @@ export default function Amigos(props) {
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box>
             <h1 className="title">
-              Lista de Amigos
+              Seguindo
             </h1>
-            <h2 className="subTitle">Eu sou legal! Eles juram!</h2>
+            <h2 className="subTitle">Eles são meus amigos, só não sabem ainda.</h2>
             <hr/>
             <ul className="photoBox">
-              {seguidores.map((itemAtual) => {
+              {seguindo.map((itemAtual) => {
                 return (
                   <li  key={itemAtual.id}>
                     <a href={itemAtual.url}>

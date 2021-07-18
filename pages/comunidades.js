@@ -13,8 +13,6 @@ export default function Amigos(props) {
   const [seguidores, setSeguidores] = React.useState([]);
   const [seguindo, setSeguindo] = React.useState([]);
   const [comunidades, setComunidades] = React.useState([]);
-  const [comunidadesDato, setComunidadesDato] = React.useState([]);
-  const somaComunidades = [...comunidadesDato, ...comunidades];
   React.useEffect(function() {
     fetch(`${baseURL}/followers?per_page=15&page=1`)
     .then(async function (respostaDoServidor) {
@@ -74,7 +72,7 @@ export default function Amigos(props) {
         }
         comunidadesDato.push(list);
       })
-      setComunidadesDato(comunidadesDato);
+      setComunidades(comunidadesDato);
     })
   }, [])
 
@@ -111,7 +109,7 @@ export default function Amigos(props) {
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
           <ProfileRelationsBox title="Seguidores" items={seguidores} numbers={props.userData.followers} />
           <ProfileRelationsBox title="Seguindo" items={seguindo} numbers={props.userData.following} />
-          <ProfileRelationsBox title="Comunidades" items={somaComunidades} numbers={somaComunidades.length} />
+          <ProfileRelationsBox title="Comunidades" items={comunidades} numbers={comunidades.length} />
         </div>
       </MainGrid>
     </>
