@@ -25,22 +25,6 @@ export default function Amigos(props) {
       setSeguindo(respostaCompleta);
     })
 
-    fetch(`${baseURL}/starred?per_page=15&page=1`)
-    .then(async function (respostaDoServidor) {
-      const respostaCompleta = await respostaDoServidor.json();
-      const lists = [];
-      respostaCompleta.map((item) => {
-        const list = {
-          id: item.id,
-          url: item.html_url,
-          avatar_url: item.owner.avatar_url,
-          login: item.name,
-        }
-        lists.push(list);
-      })
-      setComunidades(lists);
-    })
-
     fetch('https://graphql.datocms.com/', {
       method: 'POST',
       headers: {
